@@ -26,7 +26,7 @@ vector<bool> isPrime(int n) {
 
 string goldbach(int n, vector<bool>& is_prime) {
 	string s = "Goldbach's conjecture is wrong.";
-	for (int i = 1; i <= (n/2); i=i+2) {
+	for (int i = 1; i <= n; i=i+2) {
 		int tmp = n - i;
 		if (is_prime[i] && is_prime[tmp] && tmp % 2 != 0) {
 			s = to_string(n) + " = " + to_string(i) + " + " + to_string(tmp);
