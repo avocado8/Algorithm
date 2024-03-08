@@ -52,12 +52,6 @@ int solution(string op, int x) {
 	else if (op == "toggle") {
 		toggle(x);
 	}
-	else if (op == "all") {
-		all();
-	}
-	else if (op == "empty") {
-		empty();
-	}
 	return -1;
 }
 
@@ -69,8 +63,11 @@ int main() {
 	for (int i = 0; i < m;i++) {
 		string op;
 		cin >> op;
-		if (op == "all" || op =="empty") {
-			solution(op, 0);
+		if (op == "all") {
+			all();
+		}
+		else if (op == "empty") {
+			empty();
 		}
 		else {
 			int x;
