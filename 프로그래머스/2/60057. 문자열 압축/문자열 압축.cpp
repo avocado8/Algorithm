@@ -3,29 +3,29 @@
 
 using namespace std;
 
-int getShortest(string target, int unit_len) {
+int getShortest(string target, int unit_length) {
 	int length = target.length();
 	int new_len = length;
-	int cnt = 1;
-	int left = 0, right = unit_len;
+	int left = 0, right = unit_length;
 	string prev_str = "";
-	while(right<=length) {
-		string curr_str = target.substr(left, unit_len);
+	int cnt = 1;
+	while (right <= length) {
+		string curr_str = target.substr(left, unit_length);
 		if (prev_str == curr_str) cnt++;
 		else {
-			if (cnt > 1) {
+			if (cnt > 1) { //이미 압축됨
 				new_len += to_string(cnt).length();
-				new_len -= (cnt - 1) * unit_len;
+				new_len -= (cnt - 1) * unit_length;
 			}
 			prev_str = curr_str;
 			cnt = 1;
 		}
-		left += unit_len;
-		right += unit_len;
+		left += unit_length;
+		right += unit_length;
 	}
 	if (cnt > 1) {
 		new_len += to_string(cnt).length();
-		new_len -= (cnt - 1) * unit_len;
+		new_len -= (cnt - 1) * unit_length;
 	}
 	return new_len;
 }
