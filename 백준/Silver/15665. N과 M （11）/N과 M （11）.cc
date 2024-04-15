@@ -8,7 +8,6 @@ const int MAX = 7;
 
 int n, m;
 int sequence[MAX];
-bool visited[10001];
 set<vector<int>> result;
 
 void printAns() {
@@ -28,9 +27,7 @@ void backtracking(int cnt, vector<int>& arr) {
         tmp.clear();
         return;
     }
-    for (int i = 0; i < n; i++) {
-        visited[arr[i]] = true;
-    }
+
     for (int i = 0; i < n; i++) {
         sequence[cnt] = arr[i];
         backtracking(cnt + 1, arr);
