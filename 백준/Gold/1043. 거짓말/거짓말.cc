@@ -3,18 +3,19 @@
 #include <cstring>
 using namespace std;
 
-// Find the parent of a node
-int findParent(vector<int>& parent, int node) {
+vector<int>parent;
+
+int findParent(int node) {
     if (parent[node] < 0) {
         return node;
     }
-    return parent[node] = findParent(parent, parent[node]);
+    return parent[node] = findParent(parent[node]);
 }
 
 // Union two sets
-void unionInput(vector<int>& parent, int x, int y) {
-    int xp = findParent(parent, x);
-    int yp = findParent(parent, y);
+void unionInput(int x, int y) {
+    int xp = findParent(x);
+    int yp = findParent(y);
     if (xp == yp) return; // 이미 같은 집합에 속해 있다면 return
     if (parent[xp] < parent[yp]) {
         swap(xp, yp);
@@ -23,60 +24,48 @@ void unionInput(vector<int>& parent, int x, int y) {
     parent[xp] = yp;
 }
 
-int main() {
-    int N, M;
-    cin >> N >> M;
-
-    vector<int> parent(N + 1, -1);
-
-    int truthCount;
-    cin >> truthCount;
-
-    vector<int> truths(truthCount);
-    for (int i = 0; i < truthCount; ++i) {
-        cin >> truths[i];
+int main(){
+    int n, m, truth_cnt, party_size;
+    cin >> n>> m >> truth_cnt;
+    parent.assign(n+1, -1);
+    vector<int> know_truth(truth_cnt);
+    for(int i=0;i<truth_cnt;i++){
+        cin >> know_truth[i];
     }
-
-    vector<vector<int>> parties(M);
-    for (int i = 0; i < M; ++i) {
-        int partySize;
-        cin >> partySize;
-        parties[i].resize(partySize);
-        for (int j = 0; j < partySize; ++j) {
+    
+    vector<vector<int>> parties(m, vector<int>(n+1, 0));
+    for(int i=0;i<m;i++){
+        cin >> party_size;
+        parties[i].resize(party_size);
+        for(int j=0;j<party_size;j++){
             cin >> parties[i][j];
         }
     }
-
-    // Union-Find로 각 파티 연결
-    for (const auto& party : parties) {
-        for (size_t j = 1; j < party.size(); ++j) {
-            unionInput(parent, party[0], party[j]);
+    
+    for(auto party: parties){
+        for(int j=1;j<party.size();j++){
+            unionInput(party[0], party[j]);
         }
     }
-
-    // 진실을 아는 사람들의 루트를 모두 통일
-    for (int i = 1; i < truths.size(); ++i) {
-        unionInput(parent, truths[0], truths[i]);
+    
+    for(int i=1;i<truth_cnt;i++){
+        unionInput(know_truth[0], know_truth[i]);
     }
-
-    int truthRoot = truths.empty() ? -1 : findParent(parent, truths[0]);
-    int result = 0;
-
-    // 각 파티의 루트가 진실을 아는 사람의 루트와 다른지 확인
-    for (const auto& party : parties) {
-        bool canLie = true;
-        for (const auto& person : party) {
-            if (findParent(parent, person) == truthRoot) {
-                canLie = false;
+    int truth_root = know_truth.empty() ? -1 : findParent(know_truth[0]);
+    
+    int answer = 0;
+    for(auto party:parties){
+        bool flag = true; //해당 파티에서 과장할 수 있는지
+        for(auto p : party){
+            if(findParent(p) == truth_root){
+                flag = false; //해당 노드의 부모가 진실을 아는 집단의 부모와 동일 => 과장할 수 없음
                 break;
             }
         }
-        if (canLie) {
-            result++;
-        }
+        if(flag) answer++;
     }
-
-    cout << result << endl;
-
+    cout << answer;
     return 0;
+    
+    
 }
