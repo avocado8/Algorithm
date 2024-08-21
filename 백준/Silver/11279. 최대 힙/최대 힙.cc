@@ -1,47 +1,39 @@
 #include <iostream>
-#include <vector>
 #include <queue>
 
 using namespace std;
 
-priority_queue<int, vector<int>, less<>> pq;
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL); 
+	cout.tie(NULL);
 
-int solution(int x){
-    int answer;
-    if(x==0){
-        if(pq.empty()) answer = 0;
-        else {
-            answer = pq.top();
-            pq.pop();
-        }
-    }
-    else {
-        pq.push(x);
-    }
-    return answer;
-}
+	int n, x;
+	priority_queue<int> max_heap;
 
-int main()
-{
-    
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    int n, x;
-    
-    cin >> n;
-    while(n--){
-        cin >> x;
-        if(x==0){
-            if(pq.empty()) cout << 0 << '\n';
-            else {
-                cout << pq.top() << '\n';
-                pq.pop();
-            }
-        }
-        else {
-            pq.push(x);
-        }
-    }
-    
-    return 0;
+	// 입력
+	cin >> n;
+
+	// 연산 & 출력
+	while (n--) {
+		cin >> x;
+
+		// x가 0인 경우 max_heap에서 가장 큰 값 출력
+		if (x == 0) {
+			// max_heap이 비어있는 경우 0 출력
+			if (max_heap.empty()) {
+				cout << "0\n";
+			}
+			else {
+				cout << max_heap.top() << "\n";
+				max_heap.pop();
+			}
+		}
+		// x가 자연수인 경우 max_heap에 x 삽입
+		else {
+			max_heap.push(x);
+		}
+	}
+
+	return 0;
 }
