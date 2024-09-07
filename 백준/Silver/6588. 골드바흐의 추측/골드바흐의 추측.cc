@@ -1,51 +1,54 @@
 #include <iostream>
 #include <vector>
-#include <string>
-#include <algorithm>
-#include <cmath>
-#define MAX 1000000
 
 using namespace std;
 
-vector<bool> isPrime(int n) {
-	vector<bool>is_prime(n + 1, true);
+const int MAX = 1000000;
+vector<bool> is_prime(MAX + 1, true);
+
+void getPrimes() {
 	is_prime[0] = is_prime[1] = false;
-	for (int i = 2; i <= sqrt(n); i++) {
+
+	for (int i = 2; i * i <= MAX; i++) {
 		if (!is_prime[i]) {
 			continue;
 		}
-		for (int j = i * i; j <= n; j += i) {
-			if (!is_prime[j]) {
-				continue;
-			}
+		for (int j = i * i; j <= MAX; j += i) {
 			is_prime[j] = false;
 		}
 	}
-	return is_prime;
-}
-
-string goldbach(int n, vector<bool>& is_prime) {
-	string s = "Goldbach's conjecture is wrong.";
-	for (int i = 3; i <= n; i=i+2) {
-		int tmp = n - i;
-		if (is_prime[i] && is_prime[tmp] && tmp % 2 != 0) {
-			s = to_string(n) + " = " + to_string(i) + " + " + to_string(tmp);
-			break;
-		}
-	}
-	return s;
 }
 
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
-	int n;
-	vector<bool>is_prime = isPrime(MAX);
-	while (1) {
-		cin >> n;
-		if (n == 0) break;
-		cout << goldbach(n, is_prime) << "\n";
-	}
-	return 0;
-}
+	cout.tie(NULL);
 
+    //입력
+	getPrimes();
+	int n;
+
+    while (true) {
+        cin >> n;
+		if (n == 0) {
+			break;
+		}
+
+		//연산
+		//출력
+		bool flag = false;
+		for (int a = 3; a <= n; a += 2) {
+			if (is_prime[a] && is_prime[n - a]) {
+				cout << n << " = " << a << " + " << n - a << '\n';
+				flag = true;
+				break;
+			}
+		}
+		if(!flag){
+		    cout << "Goldbach's conjecture is wrong." << '\n';
+		}
+		
+		
+    }
+    return 0;
+}
