@@ -1,12 +1,22 @@
+import sys
 import math
-u1, d1 = map(int, input().split())
-u2, d2 = map(int, input().split())
+input = sys.stdin.readline
 
-dres = d1 * d2
-ures = u1*d2 + u2*d1
+A,B = map(int, input().split())
+C,D = map(int, input().split())
 
-gcd = math.gcd(dres,ures)
-dres = dres//gcd
-ures = ures//gcd
+new_mom = B*D
+new_A = A*D
+new_C = C*B
+new_son = new_A + new_C
 
-print(ures, dres)
+
+while True:
+    gcd = math.gcd(new_son, new_mom)
+    if gcd != 1:
+        new_son = new_son//gcd
+        new_mom = new_mom//gcd
+    else:
+        break
+
+print(new_son, new_mom)
