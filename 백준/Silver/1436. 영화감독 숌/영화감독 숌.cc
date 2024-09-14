@@ -1,47 +1,28 @@
 #include <iostream>
-
 using namespace std;
 
-/*
-1436 영화감독 숌
-666이 연속으로 3번이상 들어가는 수 (1666 2666...)
--> 1000으로 나눴을 때 나머지가 666
-해당 수를 10으로 나눠가면서 나머지가 666이 되는지 확인함
-*/
-
-//현재 수가 종말의 수인지 확인하는 함수
-bool isValid(int cur){
-    while(cur >= 666){
-        if(cur % 1000 == 666){
-            return true;
+//'666'이 포함된 숫자를 찾는 함수
+int findNumber(int n) {
+    int cnt = 0;  //cnt를 사용해서 "666"이 포함된 숫자의 개수를 찾는다
+    for (int i = 666; ; i++) {  //i를 666부터 시작하여 계속 증가시키며, 현재 숫자에서 "666"이 포함되어 있는지 검사 (condition x: 무한반복)
+        int tmp = i;
+        //현재 숫자에서 '666'이 포함되어 있는지 검사
+        while (tmp >= 666) {
+            if (tmp % 1000 == 666) {
+                cnt++;  //"666"이 포함된 숫자를 찾으면 cnt를 증가시키고
+                break;
+            }
+            tmp /= 10;
         }
-        cur /= 10;
-    }
-    return false;
-}
-
-
-//n번째 종말의 수가 무엇인지 찾아내는 함수
-int solution(int &n){
-    int cur = 666; //현재 탐색하는 수
-    int cnt = 0; //종말의 수 개수
-    
-    //첫번째 수인 666부터 1씩 늘려가며 조건을 충족하는지 검사
-    while(true){
-        if(isValid(cur)){
-            cnt++;
+        if (n == cnt) {
+            return i;  //cnt가 n과 같아지면 해당 숫자를 반환합
         }
-        if(cnt==n){
-            return cur;
-        }
-        cur++;
     }
 }
 
-int main()
-{
+int main() {
     int n;
-    cin >> n;
-    cout << solution(n);
+    cin >> n;  //입력
+    cout << findNumber(n) << '\n';  // 출력
     return 0;
 }
