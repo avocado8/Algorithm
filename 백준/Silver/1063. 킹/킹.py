@@ -1,22 +1,30 @@
-k, s, n = input().split()
-king = list(map(int, [ord(k[0])-64, k[1]]))
-stone = list(map(int, [ord(s[0])-64, s[1]]))
+import sys
+input = sys.stdin.readline
 
-move = {'R':[1,0],'L':[-1,0],'B':[0,-1],'T':[0,1],
-        'RT':[1,1],'LT':[-1,1],'RB':[1,-1],'LB':[-1,-1]}
+king, stone, N = input().split()
 
-for _ in range(int(n)):
-    m=input()
-    mx = king[0] + move[m][0]
-    my = king[1] + move[m][1]
-    if (0<mx<=8) and (0<my<=8):
-        if (mx==stone[0]) and (my==stone[1]): #이동 위치=돌 위치
-            sx = stone[0] + move[m][0]
-            sy = stone[1] + move[m][1]
-            if (0<sx<=8) and (0<sy<=8):
-                king = [mx,my]
-                stone = [sx,sy]
-        else:
-            king = [mx,my]
-print(chr(king[0]+64)+str(king[1]))
-print(chr(stone[0]+64)+str(stone[1]))
+col_dict = {1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F', 7: 'G', 8: 'H'}
+
+change_list = ["R", "L", "B", "T", "RT", "LT", "RB", "LB"]
+dx = [1, -1, 0, 0, 1, -1, 1, -1]
+dy = [0, 0, -1, 1, 1, 1, -1, -1]
+
+king_i, king_j = ord(king[0]) - ord('A') + 1, int(king[1])
+stone_i, stone_j = ord(stone[0]) - ord('A') + 1, int(stone[1])
+
+for _ in range(int(N)):
+    idx = change_list.index(input().strip())
+
+    new_king_i, new_king_j = king_i + dx[idx], king_j + dy[idx]
+
+    if 0 < new_king_i <= 8 and 0 < new_king_j <= 8:
+        if new_king_i == stone_i and new_king_j == stone_j:
+            new_stone_i, new_stone_j = stone_i + dx[idx], stone_j + dy[idx]
+            if 0 < new_stone_i <= 8 and 0 < new_stone_j <= 8:
+                stone_i, stone_j = new_stone_i, new_stone_j
+            else:
+                continue  # 돌이 범위를 벗어나면 킹도 움직이지 않음
+        king_i, king_j = new_king_i, new_king_j
+
+print(col_dict[king_i] + str(king_j))
+print(col_dict[stone_i] + str(stone_j))
