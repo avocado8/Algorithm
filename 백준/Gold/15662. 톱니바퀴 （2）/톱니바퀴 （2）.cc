@@ -1,84 +1,82 @@
 #include <iostream>
 #include <vector>
-#include <string>
 
 using namespace std;
 
-vector<string> li; // 톱니바퀴의 극 상태를 저장
-vector<pair<int, int>> stack; // 회전 정보를 저장
-vector<int> visited; // 톱니바퀴 회전 여부 확인했는지 (0: 안했음 / 1: 했음)
+// 시계방향 회전 함수
+string turnClockwise(string oneState) {
+    return oneState[7] + oneState.substr(0, 7);
+}
 
-void checkRotation(int num, int dir){
-    // 왼쪽으로 확인
-    if (num - 1 >=0 && !visited[num - 1]){
-        // 나의 6번톱니와 내 왼쪽바퀴의 2번톱니 같은지 확인
-        if (li[num][6] != li[num - 1][2]){
-            // 내 왼쪽톱니 회전
-            stack.push_back(make_pair(num - 1, dir * -1));
-            visited[num - 1] = 1;
-            checkRotation(num - 1, dir * -1);
+// 반시계방향 회전 함수
+string turnCounterclockwise(string oneState) {
+    return oneState.substr(1, 7) + oneState[0];
+}
+
+// 톱니바퀴 회전 함수
+void turnWheels(int num, int wise, vector<string> &state) {
+    int T = state.size();
+    vector<int> turnNum(T, 0);  // 각 톱니바퀴가 회전하는 방향을 저장할 벡터
+    turnNum[num - 1] = wise;  // 현재 톱니바퀴 회전 방향 저장
+
+    // 왼쪽 톱니바퀴들이 회전하는지 확인
+    for (int i = num - 1; i > 0; i--) {
+        if (state[i][6] != state[i - 1][2]) {
+            turnNum[i - 1] = -turnNum[i]; 
+        } else {
+            break;  
         }
     }
-    
-    // 오른쪽으로 확인
-    if (num + 1 < li.size() && !visited[num + 1]){
-        // 나의 2번톱니와 내 오른쪽바퀴의 6번톱니
-        if (li[num][2] != li[num + 1][6]){
-            // 오른쪽톱니 회전
-            stack.push_back(make_pair(num + 1, dir * -1));
-            visited[num + 1] = 1;
-            checkRotation(num + 1, dir * -1);
+
+    // 오른쪽 톱니바퀴들이 회전하는지 확인
+    for (int i = num - 1; i < T - 1; i++) {
+        if (state[i][2] != state[i + 1][6]) {
+            turnNum[i + 1] = -turnNum[i];  
+        } else {
+            break;  
+        }
+    }
+
+    // 각 톱니바퀴 회전시키기
+    for (int i = 0; i < T; i++) {
+        if (turnNum[i] == 1) {
+            state[i] = turnClockwise(state[i]);
+        } else if (turnNum[i] == -1) {
+            state[i] = turnCounterclockwise(state[i]);
         }
     }
 }
 
-int main(){
-    int t, k;
-    cin >> t; // 톱니바퀴 개수
-    
-    li.resize(t);
-    for(int i=0;i<t;i++){
-        cin >> li[i]; // 톱니바퀴 상태 입력받기
+// S극이 12시 방향에 있는 톱니바퀴의 개수 계산 함수
+int makeCount(const vector<string> &state) {
+    int count = 0;
+    for (string s : state) {
+        if (s[0] == '1') count++;  
     }
-    
-    cin >> k; // 회전 횟수
-    for(int i=0;i<k;i++){
-        int num, direction; // 회전시킬 톱니번호, 방향
-        cin >> num >> direction;
-        
-        stack.clear();
-        stack.push_back(make_pair(num - 1, direction)); // 회전 정보 저장
-        visited.assign(t, 0);
-        visited[num - 1] = 1; // 타겟 톱니바퀴 확인 여부 표시
-        // 다른 톱니바퀴들의 회전 여부 확인
-        checkRotation(num - 1, direction);
-        
-        // stack에 회전 정보가 다 들어있게 됨
-        // 진짜 돌리기!
-        while(!stack.empty()){
-            pair<int, int> curr = stack.back();
-            stack.pop_back();
-            int curr_num = curr.first;
-            int curr_dir = curr.second;
-            
-            // 시계 방향으로 회전
-            if (curr_dir == 1){
-                li[curr_num] = li[curr_num][7] + li[curr_num].substr(0, 7);
-            }
-            else { // 반시계 방향으로 회전
-                li[curr_num] = li[curr_num].substr(1) + li[curr_num][0];
-            }
-        }
+    return count;
+}
+
+int main() {
+    // 입력
+    int T, K;
+    cin >> T;
+
+    vector<string> state(T);
+    for (int i = 0; i < T; i++) {
+        cin >> state[i];
     }
-    
-    int answer = 0;
-    for(int i =0; i<t;i++){
-        if(li[i][0] == '1'){
-            answer++;
-        }
+
+    cin >> K;
+    for (int i = 0; i < K; i++) {
+        int num, wise;
+        cin >> num >> wise;
+        // 연산
+        turnWheels(num, wise, state);
     }
-    
-    cout << answer;
-    
+
+    int count = makeCount(state);
+    // 출력
+    cout << count << endl;
+
     return 0;
 }
