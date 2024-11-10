@@ -4,51 +4,51 @@
 
 using namespace std;
 
-int binarySearch(int n, int target, vector<int>& card)
+int binary(vector<int> &card, int key, int s, int e)
 {
-    int left = 0;
-    int right = n - 1;
-
-    while ( left <= right )
+    // key값과 일치하는 값이 카드에 있으면 1 반환, 없으면 0 반환
+    int m;
+    while (s <= e)
     {
-        int mid = (left + right) / 2;
-
-        if ( card[mid] == target )
+        m = (s + e) / 2;
+        if (card[m] == key)
+        {
             return 1;
-        if ( card[mid] > target )
-            right = mid - 1;
+        }
+        else if (card[m] > key)
+        {
+            e = m - 1;
+        }
         else
-            left = mid + 1;
+        {
+            s = m + 1;
+        }
     }
-
     return 0;
 }
 
 int main()
 {
-    ios::sync_with_stdio(false);
-    cin.tie(NULL); cout.tie(NULL);
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
 
-    int n, m, target;
-
-    //입력
+    int n;
     cin >> n;
-    vector<int> card(n);
-    for ( int i = 0; i < n; i++ )
+    vector<int> card(n, 0);
+
+    for (int i = 0; i < n; i++)
     {
         cin >> card[i];
     }
-
     sort(card.begin(), card.end());
 
+    int m;
     cin >> m;
-    while ( m-- )
+    for (int i = 0; i < m; i++)
     {
-        cin >> target;
-        //연산
-        //출력
-        cout << binarySearch(n, target, card) << '\n';
+        int num;
+        cin >> num;
+        cout << binary(card, num, 0, n - 1) << " ";
     }
-
-    return 0;
 }
