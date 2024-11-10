@@ -4,51 +4,57 @@
 
 using namespace std;
 
-int binary(vector<int> &card, int key, int s, int e)
-{
-    // key값과 일치하는 값이 카드에 있으면 1 반환, 없으면 0 반환
-    int m;
-    while (s <= e)
-    {
-        m = (s + e) / 2;
-        if (card[m] == key)
-        {
-            return 1;
-        }
-        else if (card[m] > key)
-        {
-            e = m - 1;
-        }
-        else
-        {
-            s = m + 1;
-        }
-    }
-    return 0;
+// 해당 수의 카드가 몇 개인지 세는 함수
+int countCards(vector<int>& nums, int target) {
+	int count = 0;
+
+	int le = 0, ri = nums.size() - 1;
+
+	while (le <= ri) {
+		int mid = (le + ri) / 2;
+
+		// target 값을 찾은 경우
+		if (nums[mid] == target) {
+			return 1;
+		}
+
+		if (nums[mid] > target) {
+			ri = mid - 1;
+		}
+
+		else if (nums[mid] < target) {
+			le = mid + 1;
+		}
+	}
+
+	// target이 존재하지 않는 경우, 0 반환
+	return 0;
 }
 
-int main()
-{
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL); cout.tie(NULL);
 
-    int n;
-    cin >> n;
-    vector<int> card(n, 0);
+	int n, m;
+	int target;
 
-    for (int i = 0; i < n; i++)
-    {
-        cin >> card[i];
-    }
-    sort(card.begin(), card.end());
+	cin >> n;
+	vector<int> nums(n);
 
-    int m;
-    cin >> m;
-    for (int i = 0; i < m; i++)
-    {
-        int num;
-        cin >> num;
-        cout << binary(card, num, 0, n - 1) << " ";
-    }
+	for (int i = 0; i < n; i++) {
+		cin >> nums[i];
+	}
+
+	// 이분 탐색을 위한 정렬
+	sort(nums.begin(), nums.end());
+
+	cin >> m;
+
+
+	for (int i = 0; i < m; i++) {
+		cin >> target;
+		cout << countCards(nums, target) << ' ';
+	}
+
+	return 0;
 }
