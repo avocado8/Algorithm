@@ -1,7 +1,6 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <iostream>
 #include <algorithm>
 using namespace std;
 
@@ -11,15 +10,13 @@ bool compare(ci a, ci b){
     if (a.first == b.first) return a.second < b.second;
     return a.first > b.first;
 }
+
+
+
 vector<int> solution(vector<string> genres, vector<int> plays) {
     vector<int> answer;
     int n = genres.size();
-    
-    // 필요한거
-    // 장르별 재생횟수합 정렬
-    // 장르내에서 각 재생횟수 정렬
-    // 고유번호 유지 필요
-    // key가 장르, value는 {재생횟수, 고유번호}배열 ? 
+
     map<string, vector<ci>> hash_map;
     for(int i=0;i<n;i++){
         hash_map[genres[i]].push_back(make_pair(plays[i], i));
@@ -34,11 +31,9 @@ vector<int> solution(vector<string> genres, vector<int> plays) {
     for(auto iter: hash_map){
         int tmp = 0;
         for(auto p: iter.second){
-            // cout << p.first << " " << p.second << "\n";
             tmp += p.first;
         }
         cnt.push_back(make_pair(tmp, iter.first));
-        // cout<< "next\n";
     }
     
     sort(cnt.begin(), cnt.end(), greater<>());
