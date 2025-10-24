@@ -1,29 +1,34 @@
 #include <string>
 #include <vector>
-
+#include <map>
 using namespace std;
-
-vector<string> letters = {
-        "zero", "one", "two", "three",
-        "four", "five", "six", "seven",
-        "eight", "nine"
-    };
 
 int solution(string s) {
     int answer = 0;
-    string tmp = "";
-    for(auto c: s){
-        if(isdigit(c)){
-            answer = answer*10 + (c-'0');
+    map<string, int>dict;
+    dict.insert({"zero",0});
+    dict.insert({"one", 1});
+    dict.insert({"two",2});
+    dict.insert({"three",3});
+    dict.insert({"four",4});
+    dict.insert({"five",5});
+    dict.insert({"six",6});
+    dict.insert({"seven",7});
+    dict.insert({"eight",8});
+    dict.insert({"nine",9});
+    
+    string answer_string="";
+    string tmp="";
+    for(int i=0;i<s.length();i++){
+        if(isdigit(s[i])) {
+            answer_string += s[i];
+            continue;
         }
-        else tmp += c;
-        for(int i=0;i<=9;i++){
-            if (letters[i]==tmp){
-                answer = answer*10 + i;
-                tmp="";
-                break;
-            }
+        tmp += s[i];
+        if(dict.find(tmp)!=dict.end()){
+            answer_string += to_string(dict[tmp]);
+            tmp = "";
         }
     }
-    return answer;
+    return stoi(answer_string);
 }
